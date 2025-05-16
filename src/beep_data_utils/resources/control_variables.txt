@@ -1,0 +1,11 @@
+cycle_number
+discharge_capacity
+voltage
+discharge_dQdV
+current
+discharge_policy
+charge_policy_Q1
+charge_policy_Q2
+charge_policy_Q3
+charge_policy_Q4
+temperature

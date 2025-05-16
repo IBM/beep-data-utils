@@ -1,0 +1,205 @@
+[tool.poetry]
+name = "beep-data-utils"
+version = "0.0.0"
+description = "Utilities for data preparation and training for the BEEP dataset."
+authors = ["AI4SD team <ai4sd@zurich.ibm.com>"]
+readme = "README.md"
+packages = [{include = "beep_data_utils", from="src"}]
+include =  ["beep_data_utils/py.typed", "beep_data_utils/resources/tests/testing_data/*",
+    "beep_data_utils/resources/tests/metadata_example*",
+    "beep_data_utils/resources/tests/test_time_information.xlsx",
+    "beep_data_utils/resources/tests/inference_config.json"]
+
+[tool.poetry_bumpversion.file."src/beep_data_utils/__init__.py"]
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+# priority = "supplemental"
+priority = "primary"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+accelerate = "^0.29.0"
+certifi = "^2024.7.4"
+cryptography = "^44.0.0"
+datasets = "^2.15.0"
+gpytorch = "^1.11"
+importlib-resources = "^6.5.2"
+interpret = "^0.4.4"
+intervaltree = "^3.1.0"
+loguru = "^0.7.2"
+mlflow = "^2.21.3"
+matplotlib = "^3.8.2"
+numpy = "^1.26.1"
+openpyxl = "^3.1.2"
+packaging = "^23.1"
+pandas = "^2.0.3"
+pydantic = "^2.6.1"
+pydantic-settings = "^2.2.1"
+scikit-learn = "^1.3.2"
+statsmodels = "^0.14.2"
+torch = "^2.6.0"
+transformers = "4.50.3"
+xgboost = "^2.0.2"
+polars = "^1.23.0"
+dash = "^3.0.2"
+
+[tool.poetry.dev-dependencies]
+mypy = "^1.0.0"
+pytest = "^7.2.0"
+pytest-cov = "^2.8.1"
+ruff = "^0.1.3"
+types-setuptools = "^57.4.14"
+
+[tool.poetry.scripts]
+beep-dataset-generator = "beep_data_utils.cli.dataset_preparation_cli:prepare_dataset_for_pretraining_and_fine_tuning"
+beep-dataset-creation = "beep_data_utils.cli.beep_dataset_creation_cli:generate_sequence_dataset"
+beep-head-training-and-evaluation = "beep_data_utils.cli.head_training_and_evaluation:main"
+beep-secondary-dataset-creation = "beep_data_utils.cli.beep_dataset_creation_seconday_dataset_cli:generate_sequence_dataset"
+beep-extract-targets = "beep_data_utils.cli.add_targets_to_taget_file:extract_targets_cli"
+beep-add-cell-key-to-domains = "beep_data_utils.cli.add_cell_keys_to_in_and_out_of_domain:generate_domain_splits"
+beep-nca-ncm-dataset-creation = "beep_data_utils.cli.nca_ncm_data_preparation:main"
+beep-nickel-dataset-creation = "beep_data_utils.cli.nickel_dataset_preparation:main"
+beep-training-max-capacity = "beep_data_utils.cli.time_enforcing_rf_training:train_head"
+beep-hf-head-training-and-evaluation = "beep_data_utils.cli.hf_head_training:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.mypy.overrides]]
+module = [
+    "boto3.*",
+    "datasets.*",
+    "importlib_resources.*",
+    "interpret.*",
+    "intervaltree.*",
+    "joblib.*",
+    "numpy.*",
+    "pandas.*",
+    "sklearn.*",
+    "tqdm.*",
+    "transformers.*",
+    "seaborn.*",
+    "umap.*",
+    "skorch.*",
+    "gpytorch.*",
+    "scipy.*",
+    "statsmodels.*",
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+# Include also Jupyter notebooks.
+extend-include = ["*.ipynb"]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 100
+indent-width = 4
+
+target-version = "py310"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+preview = true
+select = [
+    "E4", 
+    "E7", 
+    "E9", 
+    "F", 
+    "W291", 
+    "W292", 
+    "W505", 
+    "E721",
+    "I",
+    "N801",
+    "N802",
+    # "N803",
+    "N804",
+    "N805",
+    # "N806",
+    "N816",
+    # "D100",
+    # "D101",
+    # "D102",
+    "D104",
+    # "D105",
+    "D106",
+    # "D107",
+    "D300",
+    "UP010",
+    "UP011",
+    "UP019",
+    "UP032",
+    # "PTH",
+    "LOG001",
+    "LOG002"
+]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+preview = true
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"
